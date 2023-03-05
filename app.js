@@ -8,6 +8,7 @@ const Home = mongoose.model("Home");
 require('./models/contato');
 const Contato = mongoose.model("Contato");
 
+//Inicia o express
 const app = express();
 
 app.use(express.json());
@@ -30,10 +31,6 @@ mongoose.connect('mongodb://localhost/db_api', {
 	console.log("Erro: Conexão com o DB MongoDB não realizado com sucesso: ", error)
 });
 
-app.get('/', (req, res) => {
-  res.json({ name: "Mateus teste" });
-});
-
 //Rotas - home
 app.get('/home', async (req, res) => {
   await Home.findOne({}).then((home) => {
@@ -44,7 +41,7 @@ app.get('/home', async (req, res) => {
   }).catch((error) => {
     return res.status(400).json({
       error: true,
-      message: "Nenhum registro encontrado!"
+      message: "Nenhum registro encontrado!", error
     });
   });
 });
@@ -59,12 +56,12 @@ app.post('/home', async (req, res) => {
   };
 
 	const result = new Home(req.body) 
-  await result.save().then(()=>{
+  await result.save().then(() => {
     res.json({
       error: false,
       message: "Conteúdo da página home cadastrado com sucesso!"
     });
-  }).catch((error)=> {
+  }).catch((error) => {
     res.json({
       error: true,
       message: "Conteúdo da página home não cadastrado com sucesso:", error
@@ -74,6 +71,13 @@ app.post('/home', async (req, res) => {
 
 //Rotas - Contato
 app.post('/contato', async (req, res) => {
+  await sleep(3000);
+  function sleep(ms){
+    return new Promise((resolve) => {
+      setTimeout(resolve, ms);
+    });
+  };
+
 	const result = new Contato(req.body) 
   await result.save().then(() => {
     res.json({
