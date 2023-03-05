@@ -70,6 +70,20 @@ app.post('/home', async (req, res) => {
 });
 
 //Rotas - Contato
+app.get('/contato', async (req, res) => {
+  await Contato.find({}).then((contato) => {
+    return res.json({
+      error: false,
+      contato
+    });
+  }).catch((error) => {
+    return res.status(400).json({
+      error: true,
+      message: "Erro: nenhum registro encontrado.", error
+    });
+  });
+});
+
 app.post('/contato', async (req, res) => {
   await sleep(3000);
   function sleep(ms){
